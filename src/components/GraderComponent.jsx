@@ -8,20 +8,28 @@ const { Header, Content, Sider } = Layout;
 
 const GraderComponent = (props) => {
 
+    const {taskSubmission} = props;
+
     const [tasks, setTasks] = useState([]);
     const [examGroups, setExamGroups] = useState([]);
     const [points, setPoints] = useState();
     const [task, setTask] = useState(JSON.parse('{ "id": 12, "name": "Zadatak 1", "text": "Lorem ipsum", "learning_outcome": 3, "group": "A", "max_points": 5 }'));
-    
+
+    const [source, setSource] = useState(""); 
+
     const [messageApi, contextHolder] = message.useMessage();
     // TODO: check for previously selected group
-    const examId = 6;
+    const examId = 6; // TODO: replace
 
     useEffect(() => {
         getGroupsByExam(examId).then(res => {
             setExamGroups(res.data.map(group => { return { label: group, value: group } }))
         }).catch(err => console.log(err))
-    })
+    }, [])
+
+    // useEffect(() => {
+    //         setSource("novi tekst");
+    // }, [props.taskSubmission])
 
     const onExamGroupChanged = (group) => {
         getTasksByExamAndGroup(examId, group).then(res => {
@@ -30,11 +38,6 @@ const GraderComponent = (props) => {
     }
 
     const gradeTask = () => {
-        messageApi.open({
-            type: 'success',
-            content: 'Grade saved!',
-            duration: 1
-        });
         // const data = {
         //     taskId: task.id,
         //     scorredPoints: points,
@@ -43,8 +46,12 @@ const GraderComponent = (props) => {
         // updateTaskSubmission(props.taskSubmissionId, data).then(() => {
         //     messageApi.success("Grade saved!")
         // })
+        messageApi.open({
+            type: 'success',
+            content: 'Grade saved!',
+            duration: 1
+        });
     }
-
 
     const onTaskChanged = (value) => {
         console.log(value);
@@ -65,7 +72,7 @@ const GraderComponent = (props) => {
                                     <Breadcrumb>
                                         <Breadcrumb.Item>
                                             <UserOutlined />
-                                            <span>{props.taskSubmission.student.name} {props.taskSubmission.student.surname}</span>
+                                            {taskSubmission.student ? <span>{taskSubmission.student.name} {taskSubmission.student.surname}</span> : <></>}
                                         </Breadcrumb.Item>
                                     </Breadcrumb>
                                 </Space>
@@ -77,7 +84,7 @@ const GraderComponent = (props) => {
                             </Col>
                         </Row>
                     </Header>
-                    <CodeEditor />
+                    <CodeEditor sourceText={taskSubmission.sourceText}/>
                 </Sider>
                 <Content>
                     <Header style={{ backgroundColor: 'white' }}>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 const BASE_API_URL = 'http://localhost:3000/api/v1'
+const BASE_MINIO_URL = "http://localhost:9000/test/"
 
 async function uploadSubmission(file, name, term, createdBy) {
     const data = new FormData();
@@ -56,9 +57,23 @@ async function updateTaskSubmission(submissionTaskId, data) {
 }
 
 async function getSubmission(submissionId) {
-    return await axios({
+    return  await axios({
         method: 'GET',
         url: `${BASE_API_URL}/submission/${submissionId}`
+    })
+}
+
+async function getSubmissionTask(id) {
+    return await axios({
+        method: 'GET',
+        url: `${BASE_API_URL}/submission/task/${id}`
+    })
+}
+
+async function getSourceFile(fileLink) {
+    return await axios({
+        method: "GET",
+        url: `http://${fileLink}`
     })
 }
 
@@ -70,6 +85,8 @@ export {
     getTasksByExamAndGroup,
     getTask,
     updateTaskSubmission,
-    getSubmission
+    getSubmission,
+    getSubmissionTask,
+    getSourceFile
 };
 

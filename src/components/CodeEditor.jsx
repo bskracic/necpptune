@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
-import "react-dropdown/style.css";
+import { CaretRightFill, ZoomIn, ZoomOut } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { ZoomIn, ZoomOut, CaretRightFill } from "react-bootstrap-icons";
+import "react-dropdown/style.css";
 
-import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-sqlserver";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -26,13 +26,14 @@ export default function CodeEditor(props) {
     },
   ];
 
-  const [mainFileText, setMainFileText] = useState("source code");
+  // const [mainFileText, setMainFileText] = useState("source code");
+  const { sourceText } = props;
   const [zoom, setZoom] = useState(1);
   const [theme, setTheme] = useState(themes[0]);
 
   const submit = () => {
     const payload = JSON.stringify({
-      main_file_text: mainFileText,
+      main_file_text: sourceText,
       language_id: 12,
       exec_config: {
         compiler_opt: "",
@@ -59,22 +60,21 @@ export default function CodeEditor(props) {
     //   .catch((err) => console.log(err));
   };
 
+  // sourceText={source}
   return (
     <div>
       <AceEditor
         name="main_file_text"
         mode="c_cpp"
         theme={theme.value}
-        value={mainFileText}
+        value={sourceText}
         width="100%"
         height="80vh"
         style={{ fontSize: zoom * 15 }}
         showPrintMargin={false}
-        // enableLiveAutocompletion={true}
-        // enableBasicAutocompletion={true}
-        onChange={(change) => {
-          setMainFileText(change);
-        }}
+        // onChange={(change) => {
+        //   // setMainFileText(change);
+        // }}
         editorProps={{ $blockScrolling: true }}
       />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center'}}>
